@@ -36,4 +36,25 @@ export interface Problem {
   completed: boolean;
   bookmarked: boolean;
   通过率: number;
+  template: "multiple-choice" | "coding" | "essay" | "fill-blank";
+  content: string;
+  // 根据题目类型添加特定字段
+  options?: string[]; // 选择题选项
+  correctAnswer?: string | string[]; // 正确答案
+  sampleCode?: string; // 编程题示例代码
+  testCases?: TestCase[]; // 编程题测试用例
+  expectedLength?: number; // 解答题期望字数
+  blanks?: Blank[]; // 填空题空格信息
+}
+
+interface TestCase {
+  input: string;
+  output: string;
+}
+
+interface Blank {
+  id: number;
+  position: number;
+  type: "text" | "number" | "code";
+  answer: string;
 }

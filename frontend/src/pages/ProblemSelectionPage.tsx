@@ -9,12 +9,37 @@ import { useContext } from "react";
 import { AuthContext } from "@/contexts/authContext";
 import { api, Problem } from "@/lib/api";
 
-/*
-useEffect
+// 获取题目类型图标
+const getProblemTypeIcon = (template: string) => {
+  switch (template) {
+    case "multiple-choice":
+      return "fa-circle-check";
+    case "coding":
+      return "fa-code";
+    case "essay":
+      return "fa-pen-to-square";
+    case "fill-blank":
+      return "fa-square-pen";
+    default:
+      return "fa-question";
+  }
+};
 
-
-
- */
+// 获取题目类型名称
+const getProblemTypeName = (template: string) => {
+  switch (template) {
+    case "multiple-choice":
+      return "选择题";
+    case "coding":
+      return "编程题";
+    case "essay":
+      return "解答题";
+    case "fill-blank":
+      return "填空题";
+    default:
+      return "未知类型";
+  }
+};
 
 // 题目分类
 const CATEGORIES = [
@@ -91,18 +116,12 @@ export default function ProblemSelectionPage() {
   useEffect(() => {
     const loadProblems = async () => {
       try {
-        // 从 localStorage 获取用户的题目完成状态
-        const savedProblems = localStorage.getItem("userProblems");
-
-        if (savedProblems) {
-          // 如果有本地存储的数据，使用它
-          setProblems(JSON.parse(savedProblems));
-        } else {
-          // 否则从 API 获取数据
+       
+          // 从 API 获取数据
           const problems = await api.getProblems();
           setProblems(problems);
           localStorage.setItem("userProblems", JSON.stringify(problems));
-        }
+      
       } catch (error) {
         console.error("Failed to load problems:", error);
         toast.error("加载题目失败");
@@ -207,7 +226,7 @@ export default function ProblemSelectionPage() {
         toast.success(
           `题目已${updatedProblem.bookmarked ? "收藏" : "取消收藏"}`
         );
-        
+
         // 触发自定义事件，通知其他组件收藏状态已更新
         window.dispatchEvent(
           new CustomEvent("bookmarksUpdated", {
@@ -269,9 +288,9 @@ export default function ProblemSelectionPage() {
             className="text-gray-600 hover:text-blue-600 p-2 absolute -right-4 top-1/2 -translate-y-1/2 z-10 bg-gradient-to-r from-white to-gray-50 rounded-full shadow-lg border border-gray-200 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:border-blue-300 flex items-center justify-center"
           >
             {sidebarCollapsed ? (
-              <i className="iconfont icon-chevron_rectangle_right text-sm transform transition-transform duration-300 hover:translate-x-1"></i>
+              <i className="iconfont icon-forward_line text-sm transform transition-transform duration-300 hover:translate-x-1"></i>
             ) : (
-              <i className="iconfont icon-chevron_rectangle_left text-sm transform transition-transform duration-300 hover:-translate-x-1"></i>
+              <i className="iconfont icon-backward_line text-sm transform transition-transform duration-300 hover:-translate-x-1"></i>
             )}
           </button>
           <div className="h-full flex flex-col">
@@ -588,23 +607,6 @@ export default function ProblemSelectionPage() {
                         显示已完成题目
                       </label>
                     </div>
-
-                    <div className="flex items-center">
-                      <input
-                        id="showBookmarked"
-                        type="checkbox"
-                        checked={showBookmarked}
-                        onChange={(e) => setShowBookmarked(e.target.checked)}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        aria-label="只显示收藏题目"
-                      />
-                      <label
-                        htmlFor="showBookmarked"
-                        className="ml-2 block text-sm text-gray-700"
-                      >
-                        只显示收藏题目
-                      </label>
-                    </div>
                   </div>
                 </div>
 
@@ -665,9 +667,20 @@ export default function ProblemSelectionPage() {
                                   ? "中等"
                                   : "困难"}
                               </span>
+{/* 类型标签 */}
                               <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                 {problem.category}
                               </span>
+{/* 题目类型 */}
+                              <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 flex items-center">
+                                <i
+                                  className={`fas ${getProblemTypeIcon(
+                                    problem.template
+                                  )} mr-1`}
+                                ></i>
+                                {getProblemTypeName(problem.template)}
+                              </span>
+
                             </div>
 
                             <div className="flex flex-wrap gap-1 mb-4">
