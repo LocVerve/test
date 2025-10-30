@@ -4,7 +4,7 @@ import { Problem, api } from "@/lib/api";
 import { MultipleChoiceProblem } from "./MultipleChoiceProblem";
 import { CodingProblem } from "./CodingProblem";
 import { EssayProblem } from "./EssayProblem";
-import { FillBlankProblem } from "./FillBlankProblem";
+
 
 export const ProblemRouter = () => {
   const { id } = useParams<{ id: string }>();
@@ -140,14 +140,7 @@ export const ProblemRouter = () => {
             initialAnswer={userAnswers[id ||""]?.answer}
           />
         );
-      case "fill-blank":
-        return (
-          <FillBlankProblem
-            problem={problem}
-            onSubmit={handleProblemSubmit}
-            initialAnswers={userAnswers[id || "" ]?.answers}
-          />
-        );
+     
       default:
         return (
           <div className="error p-6 bg-red-50 border border-red-200 rounded-lg">

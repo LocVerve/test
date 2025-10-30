@@ -110,7 +110,7 @@ export default function ProfilePanel() {
   const [userProfile, setUserProfile] = useState<UserProfile>(MOCK_USER_PROFILE);
   const [learningStats] = useState<LearningStats>(MOCK_LEARNING_STATS);
   const [wrongProblems, setWrongProblems] = useState<WrongProblem[]>(MOCK_WRONG_PROBLEMS);
-  const [bookmarkedProblems, setBookmarkedProblems] = useState<BookmarkedProblem[]>(MOCK_BOOKMARKED_PROBLEMS);
+  
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editedProfile, setEditedProfile] = useState<UserProfile>(MOCK_USER_PROFILE);
 
@@ -133,10 +133,7 @@ export default function ProfilePanel() {
     toast.success('已从错题本中移除');
   };
 
-  const removeFromBookmarks = (id: number) => {
-    setBookmarkedProblems(prev => prev.filter(problem => problem.id !== id));
-    toast.success('已取消收藏');
-  };
+  
 
   const completionPercentage = Math.round((learningStats.completedProblems / learningStats.totalProblems) * 100);
 
@@ -161,7 +158,7 @@ export default function ProfilePanel() {
               <div className="mt-4 flex justify-center space-x-3">
                 <button onClick={() => setActiveTab('stats')} className={cn("px-3 py-1 rounded-full text-xs font-medium transition-colors", activeTab === 'stats' ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800 hover:bg-gray-200")}>学习数据</button>
                 <button onClick={() => setActiveTab('wrong')} className={cn("px-3 py-1 rounded-full text-xs font-medium transition-colors", activeTab === 'wrong' ? "bg-red-100 text-red-800" : "bg-gray-100 text-gray-800 hover:bg-gray-200")}>错题本</button>
-                <button onClick={() => setActiveTab('bookmarks')} className={cn("px-3 py-1 rounded-full text-xs font-medium transition-colors", activeTab === 'bookmarks' ? "bg-yellow-100 text-yellow-800" : "bg-gray-100 text-gray-800 hover:bg-gray-200")}>收藏</button>
+                
               </div>
             </div>
             <div className="mt-6 grid grid-cols-2 gap-4 text-center">

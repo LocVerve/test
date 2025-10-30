@@ -88,35 +88,6 @@
       "expectedLength": 500
     },
     {
-      "id": "4",
-      "title": "CSS基础填空",
-      "difficulty": "easy",
-      "category": "前端开发",
-      "tags": [
-        "CSS",
-        "基础语法"
-      ],
-      "completed": true,
-      "bookmarked": false,
-      "通过率": 41.2,
-      "template": "fill-blank",
-      "content": "请完成以下CSS属性的填空",
-      "blanks": [
-        {
-          "id": 1,
-          "position": 1,
-          "type": "text",
-          "answer": "display"
-        },
-        {
-          "id": 2,
-          "position": 2,
-          "type": "text",
-          "answer": "flex"
-        }
-      ]
-    },
-    {
       "id": "5",
       "title": "字符串相乘",
       "difficulty": "medium",
@@ -177,7 +148,7 @@
         "字符串",
         "动态规划"
       ],
-      "completed": false,
+      "completed": true,
       "bookmarked": false,
       "通过率": 27.6,
       "template": "coding",
@@ -229,7 +200,7 @@
         "网络协议",
         "TCP/IP"
       ],
-      "completed": false,
+      "completed": true,
       "bookmarked": false,
       "通过率": 40.5,
       "template": "multiple-choice",
@@ -257,6 +228,128 @@
       "template": "essay",
       "content": "请详细解释虚拟内存的工作原理，并说明它如何提高内存利用率和程序执行效率。",
       "expectedLength": 800
+    },
+    {
+      "id": "11",
+      "title": "HTML5新特性",
+      "difficulty": "easy",
+      "category": "前端开发",
+      "tags": [
+        "HTML5",
+        "Web开发"
+      ],
+      "completed": false,
+      "bookmarked": false,
+      "通过率": 38.2,
+      "template": "multiple-choice",
+      "content": "以下哪个不是HTML5新增的语义化标签？",
+      "options": [
+        "<header>",
+        "<section>",
+        "<span>",
+        "<article>"
+      ],
+      "correctAnswer": "<span>"
+    },
+    {
+      "id": "12",
+      "title": "Vue.js响应式原理",
+      "difficulty": "medium",
+      "category": "前端开发",
+      "tags": [
+        "Vue.js",
+        "响应式"
+      ],
+      "completed": false,
+      "bookmarked": false,
+      "通过率": 29.7,
+      "template": "multiple-choice",
+      "content": "Vue.js中实现数据响应式的核心技术是什么？",
+      "options": [
+        "Object.defineProperty",
+        "Proxy",
+        "发布订阅模式",
+        "以上都是"
+      ],
+      "correctAnswer": "以上都是"
+    },
+    {
+      "id": "13",
+      "title": "二叉树的最大深度",
+      "difficulty": "easy",
+      "category": "数据结构",
+      "tags": [
+        "二叉树",
+        "递归"
+      ],
+      "completed": false,
+      "bookmarked": false,
+      "通过率": 48.6,
+      "template": "coding",
+      "content": "给定一个二叉树，找出其最大深度。二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。",
+      "sampleCode": "function maxDepth(root) {\n  // 在此编写代码\n  return 0;\n}",
+      "testCases": [
+        {
+          "input": "[3,9,20,null,null,15,7]",
+          "output": "3"
+        },
+        {
+          "input": "[1,null,2]",
+          "output": "2"
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "title": "有效的括号",
+      "difficulty": "easy",
+      "category": "数据结构",
+      "tags": [
+        "栈",
+        "字符串"
+      ],
+      "completed": false,
+      "bookmarked": false,
+      "通过率": 42.3,
+      "template": "coding",
+      "content": "给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。",
+      "sampleCode": "function isValid(s) {\n  // 在此编写代码\n  return false;\n}",
+      "testCases": [
+        {
+          "input": "'()'",
+          "output": "true"
+        },
+        {
+          "input": "'()[]{}'",
+          "output": "true"
+        },
+        {
+          "input": "'(]'",
+          "output": "false"
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "title": "数据库事务特性",
+      "difficulty": "medium",
+      "category": "数据库",
+      "tags": [
+        "事务",
+        "ACID"
+      ],
+      "completed": false,
+      "bookmarked": false,
+      "通过率": 36.8,
+      "template": "multiple-choice",
+      "content": "数据库事务的ACID特性中，'C'代表什么？",
+      "options": [
+        "一致性(Consistency)",
+        "并发性(Concurrency)",
+        "连续性(Continuity)",
+        "复杂性(Complexity)"
+      ],
+      "correctAnswer": "一致性(Consistency)"
     }
   ]
 }

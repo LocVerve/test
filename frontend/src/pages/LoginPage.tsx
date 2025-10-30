@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
-import CustomCheckbox from "@/components/ui/CustomCheckbox";
+import CustomCheckbox from "@/components/CustomCheckbox";
 
 /*
 📚📚📚

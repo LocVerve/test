@@ -1,17 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-/*
-📚📚📚
-javascript 是一个动态的编程语言，所以在变量声明的时候不需要指定类型  -- 这点和python是一样的
-- const、let 和 var 都是用来声明变量的关键字
-const 用于声明常量，let 用于声明可变变量(作用域较小，只作用在块里面)，而 var 是旧的声明方式(作用域较大，全局作用域)
-- className 是用来给 HTML 元素添加css属性的，在 React 中，我们使用 className 而不是 class
-
-- export default 是用来导出模块的关键词，它允许我们在其他文件中导入这个模块
-
-- <i> 标签是 HTML 中的一个元素，用于表示图标. 我们在这个项目里面使用的是阿里标签这个标签库,在代码中使用的话需要引入对应的图标库在Index.html中引入,然后使用<i className="iconfont icon-xxx"></i>来使用
-*/
 
 ///  想法: 给页面增加落叶效果
 //> 落叶效果
@@ -133,3 +122,19 @@ function Home() {
 
 export default Home;
 
+
+
+
+
+
+/*
+📚📚📚
+javascript 是一个动态的编程语言，所以在变量声明的时候不需要指定类型  -- 这点和python是一样的
+- const、let 和 var 都是用来声明变量的关键字
+const 用于声明常量，let 用于声明可变变量(作用域较小，只作用在块里面)，而 var 是旧的声明方式(作用域较大，全局作用域)
+- className 是用来给 HTML 元素添加css属性的，在 React 中，我们使用 className 而不是 class
+
+- export default 是用来导出模块的关键词，它允许我们在其他文件中导入这个模块
+
+- <i> 标签是 HTML 中的一个元素，用于表示图标. 我们在这个项目里面使用的是阿里标签这个标签库,在代码中使用的话需要引入对应的图标库在Index.html中引入,然后使用<i className="iconfont icon-xxx"></i>来使用
+*/

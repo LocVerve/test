@@ -2,7 +2,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "@/pages/Home";
 import LoginPage from "@/pages/LoginPage";
 import ProblemSelectionPage from "@/pages/ProblemSelectionPage";
-import ProblemSolvingPage from "@/pages/ProblemSolvingPage";
 import { ProblemRouter } from "@/pages/problems/ProblemRouter";
 import { useState, useEffect } from "react";
 import { AuthContext } from "@/contexts/authContext";

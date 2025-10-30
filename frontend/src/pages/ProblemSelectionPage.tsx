@@ -8,6 +8,7 @@ import BookmarkPanel from "@/pages/BookmarkPanel";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/authContext";
 import { api, Problem } from "@/lib/api";
+import SmoothDropdown from "@/components/SmoothDropdown";
 
 // 获取题目类型图标
 const getProblemTypeIcon = (template: string) => {
@@ -66,11 +67,12 @@ export default function ProblemSelectionPage() {
   const [activeView, setActiveView] = useState<
     "problems" | "profile" | "ai-generate" | "bookmarks"
   >("problems");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [showSettingsMenu, setShowSettingsMenu] = useState(false); // 控制设置菜单的显示状态
   const [bgColor, setBgColor] = useState(
     "bg-gradient-to-br from-blue-100 to-blue-300"
   ); // 当前背景颜色
+
   // 处理AI生成的题目
   const handleGeneratedProblems = (problems: any[]) => {
     // 将生成的题目添加到问题列表中
@@ -101,6 +103,10 @@ export default function ProblemSelectionPage() {
     }
   }, [sidebarCollapsed]);
 
+
+
+
+
   // 退出登录函数
   const handleLogout = () => {
     localStorage.removeItem("userProblems"); // 清除题目数据
@@ -116,12 +122,10 @@ export default function ProblemSelectionPage() {
   useEffect(() => {
     const loadProblems = async () => {
       try {
-       
-          // 从 API 获取数据
-          const problems = await api.getProblems();
-          setProblems(problems);
-          localStorage.setItem("userProblems", JSON.stringify(problems));
-      
+        // 从 API 获取数据
+        const problems = await api.getProblems();
+        setProblems(problems);
+        localStorage.setItem("userProblems", JSON.stringify(problems));
       } catch (error) {
         console.error("Failed to load problems:", error);
         toast.error("加载题目失败");
@@ -270,9 +274,9 @@ export default function ProblemSelectionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col bg-gradient-to-br from-blue-100 to-blue-300">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br">
       <div className="flex flex-1 overflow-hidden relative">
-        {/* 左侧导航栏 - 类似豆包网页版的丝滑收缩任务栏 */}
+        {/* 左侧导航栏 */}
         <aside
           className={cn(
             bgColor,
@@ -398,7 +402,7 @@ export default function ProblemSelectionPage() {
               <button
                 className={cn(
                   "w-full flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-300",
-                  "relative mt-auto",
+                  "relative -mt-20",
                   sidebarCollapsed && "-mb+5"
                 )}
               >
@@ -493,7 +497,7 @@ export default function ProblemSelectionPage() {
           className={cn(
             "flex-grow overflow-y-auto p-4 sm:p-6 lg:p-8 transition-all duration-300",
             bgColor,
-            sidebarCollapsed ? "md:pl-20" : "md:pl-72"
+            sidebarCollapsed ? "md:pl-10" : "md:pl-72"
           )}
         >
           <div>
@@ -527,17 +531,12 @@ export default function ProblemSelectionPage() {
 
                     {/* 分类筛选 */}
                     <div>
-                      <select
+                      <SmoothDropdown
+                        options={CATEGORIES}
                         value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="block w-full pl-3 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 appearance-none bg-white"
-                      >
-                        {CATEGORIES.map((category) => (
-                          <option key={category} value={category}>
-                            {category}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={setSelectedCategory}
+                        placeholder="选择分类"
+                      />
                     </div>
 
                     {/* 难度筛选 */}
@@ -667,11 +666,11 @@ export default function ProblemSelectionPage() {
                                   ? "中等"
                                   : "困难"}
                               </span>
-{/* 类型标签 */}
+                              {/* 类型标签 */}
                               <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                 {problem.category}
                               </span>
-{/* 题目类型 */}
+                              {/* 题目类型 */}
                               <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 flex items-center">
                                 <i
                                   className={`fas ${getProblemTypeIcon(
@@ -680,7 +679,6 @@ export default function ProblemSelectionPage() {
                                 ></i>
                                 {getProblemTypeName(problem.template)}
                               </span>
-
                             </div>
 
                             <div className="flex flex-wrap gap-1 mb-4">

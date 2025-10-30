@@ -41,6 +41,7 @@ export interface Problem {
   // 根据题目类型添加特定字段
   options?: string[]; // 选择题选项
   correctAnswer?: string | string[]; // 正确答案
+  explanation?: string; // 题目解释
   sampleCode?: string; // 编程题示例代码
   testCases?: TestCase[]; // 编程题测试用例
   expectedLength?: number; // 解答题期望字数
