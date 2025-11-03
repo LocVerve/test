@@ -32,6 +32,9 @@ const Leaf = ({ delay }: { delay: number }) => {
   );
 };
 
+const  hhlist = 'https://leetcode.cn/'
+console.log("来点带劲的网站不?:👹", hhlist);
+
 //> 图标列表
 const features = [
     {
