@@ -56,7 +56,7 @@ function Home() {
     return (
     <div className="min-h-screen bg-gradient-to-br from-red-600 to-indigo-700 flex flex-col text-white">
       {/* 背景装饰元素 */}
-      <div className="absolute inset-0 bg-[url('..\src\sourse\bg2.jpg')] bg-cover bg-center bg-no-repeat opacity"></div>
+      <div className="fixed inset-0 bg-[url('..\src\sourse\bg2.jpg')] flex items-center justify-center p-4"></div>
       {/* 落叶装饰元素 */}
       <div className="leaves-container">
         {[...Array(15)].map((_, i) => (
