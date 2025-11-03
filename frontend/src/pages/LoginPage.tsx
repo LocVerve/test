@@ -101,7 +101,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen   bg-[url('..\src\sourse\bg3.jpg')]   to-indigo-100 flex items-center justify-center p-4  ">
+    <div className="min-h-screen   bg-[url('..\src\bg\bg3.jpg')]   to-indigo-100 flex items-center justify-center p-4  ">
       <div className="w-full max-w-md ">
         <div className="bg-white rounded-2xl shadow-xl1 overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
           <div className="p-8 space-y-6">

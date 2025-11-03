@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { api, Problem } from "../lib/api";
+import SmoothDropdown from "../components/SmoothDropdown"
 
 
 export default function BookmarkPanel() {
@@ -211,20 +212,15 @@ export default function BookmarkPanel() {
                 className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
               />
             </div>
-
             {/* 分类筛选 */}
             <div>
-              <select
+              <SmoothDropdown
+                options={CATEGORIES}
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="block w-full pl-3 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 appearance-none bg-white"
-              >
-                {CATEGORIES.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
+                onChange={(value) => setSelectedCategory(value)}
+                placeholder="选择分类"
+                className="w-full"
+              />
             </div>
 
             {/* 难度筛选 */}

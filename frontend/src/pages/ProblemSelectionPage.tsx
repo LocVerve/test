@@ -103,10 +103,6 @@ export default function ProblemSelectionPage() {
     }
   }, [sidebarCollapsed]);
 
-
-
-
-
   // 退出登录函数
   const handleLogout = () => {
     localStorage.removeItem("userProblems"); // 清除题目数据
@@ -313,23 +309,6 @@ export default function ProblemSelectionPage() {
             >
               <nav className="space-y-1">
                 <button
-                  onClick={() => setActiveView("problems")}
-                  className={cn(
-                    "w-full flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-300",
-                    activeView === "problems"
-                      ? "text-blue-600 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 shadow-sm"
-                      : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-blue-600 hover:shadow-sm"
-                  )}
-                >
-                  <i className="fa-solid fa-list-ul flex-shrink-0 transition-transform duration-300 group-hover:scale-110"></i>
-                  {!sidebarCollapsed && (
-                    <span className="ml-3 whitespace-nowrap transition-all duration-300 group-hover:translate-x-1">
-                      题目列表
-                    </span>
-                  )}
-                </button>
-
-                <button
                   onClick={() => setActiveView("profile")}
                   className={cn(
                     "w-full flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-300",
@@ -342,6 +321,22 @@ export default function ProblemSelectionPage() {
                   {!sidebarCollapsed && (
                     <span className="ml-3 whitespace-nowrap transition-all duration-300 group-hover:translate-x-1">
                       个人中心
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={() => setActiveView("problems")}
+                  className={cn(
+                    "w-full flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-300",
+                    activeView === "problems"
+                      ? "text-blue-600 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 shadow-sm"
+                      : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-blue-600 hover:shadow-sm"
+                  )}
+                >
+                  <i className="fa-solid fa-list-ul flex-shrink-0 transition-transform duration-300 group-hover:scale-110"></i>
+                  {!sidebarCollapsed && (
+                    <span className="ml-3 whitespace-nowrap transition-all duration-300 group-hover:translate-x-1">
+                      题目列表
                     </span>
                   )}
                 </button>
