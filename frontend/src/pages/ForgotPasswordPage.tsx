@@ -39,7 +39,7 @@ export default function ForgotPasswordPage() {
 
     try {
       // 使用JSON Server API
-      const response = await fetch("http://localhost:3001/users");
+      const response = await fetch("http://localhost:3001/api/users");
       const users = await response.json();
 
       // 查找匹配的用户

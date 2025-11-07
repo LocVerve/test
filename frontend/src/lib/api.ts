@@ -1,30 +1,4 @@
-const API_BASE_URL = 'http://localhost:3001';
-
-export const api = {
-  // 获取所有题目
-  getProblems: async (): Promise<Problem[]> => {
-    const response = await fetch(`${API_BASE_URL}/problems`);
-    return response.json();
-  },
-
-  // 获取单个题目
-  getProblem: async (id: number): Promise<Problem> => {
-    const response = await fetch(`${API_BASE_URL}/problems/${id}`);
-    return response.json();
-  },
-
-  // 更新题目状态（完成/收藏等）
-  updateProblem: async (id: number, data: Partial<Problem>): Promise<Problem> => {
-    const response = await fetch(`${API_BASE_URL}/problems/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return response.json();
-  }
-};
+const API_BASE_URL = 'http://localhost:3001/api';
 
 // 题目类型定义
 export interface Problem {
@@ -59,3 +33,35 @@ interface Blank {
   type: "text" | "number" | "code";
   answer: string;
 }
+
+
+
+export const api = {
+  // 获取所有题目
+  getProblems: async (): Promise<Problem[]> => {
+    const response = await fetch(`${API_BASE_URL}/problems`);
+    return response.json();
+  },
+
+  // 获取单个题目
+  getProblem: async (id: number): Promise<Problem> => {
+    const response = await fetch(`${API_BASE_URL}/problems/${id}`);
+    return response.json();
+  },
+
+  // 更新题目状态（完成/收藏等）
+  updateProblem: async (id: number, data: Partial<Problem>): Promise<Problem> => {
+    const response = await fetch(`${API_BASE_URL}/problems/${id}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: JSON.parse(localStorage.getItem("user") || sessionStorage.getItem("user") || "{}").id,
+        ...data
+      }),
+    });
+    return response.json();
+  }
+};
+

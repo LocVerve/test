@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import CustomCheckbox from "@/components/CustomCheckbox";
+import { api } from "@/lib/api";
 
 
 
@@ -56,15 +57,23 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // 使用JSON Server API
-      //* 使用命令 json-server --watch db.json --port 3001 进行模拟
-      const response = await fetch("http://localhost:3001/users");
-      const users = await response.json();
-
-      // 查找匹配的用户
-      const matchedUser = users.find(
-        (user: any) => user.email === email && user.password === password
-      );
+      // 使用后端API进行登录
+      const response = await fetch("http://localhost:3001/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || "登录失败");
+      }
+      
+      // 后端返回包含用户信息和token的对象
+      const matchedUser = data;
 
       if (matchedUser) {
         setIsAuthenticated(true);
@@ -74,6 +83,8 @@ export default function LoginPage() {
           email: matchedUser.email,
           studentId: matchedUser.studentId,
           id: matchedUser.id,
+          username: matchedUser.username,
+          role: matchedUser.role,
           timestamp: Date.now(), // 添加当前时间戳
         };
         const STORAGE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7天
