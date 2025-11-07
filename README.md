@@ -187,7 +187,6 @@ git push origin main
 
 ---
 # 后端
-# 教育网站后端服务
 
 这是一个基于Node.js和Express的教育网站后端服务，使用MySQL作为数据库。
 
@@ -266,12 +265,12 @@ backend/
 │   └── init.sql           # 数据库初始化脚本
 ├── routes/
 │   ├── auth.js            # 认证相关路由
-│   ├── courses.js         # 课程相关路由
+│   ├── problems.js         # 课程相关路由
 │   └── users.js           # 用户相关路由
 ├── .env                   # 环境变量配置
 ├── package.json           # 项目依赖和脚本
 ├── server.js              # 主服务器
-└── README.md              # 项目文档
+
 ```
 
 ## 注意事项
