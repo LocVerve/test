@@ -29,11 +29,6 @@ pnpm install
 pnpm run dev
 ```
 
-- 本项目现阶段使用 json-server 模拟 API,如果要登录的话运行运行如下代码
-
-```sh
-pnpm install -g json-server
-json-server --watch db.json --port 3001
 ```
 
 - 在浏览器访问 http://localhost:3000
@@ -144,48 +139,7 @@ src/
 这个项目是提供计算机类大学生刷题的网站项目,我们在网页上提供了一些题目,用户可以登录后进行刷题,并且可以查看自己的做题记录,以及一些统计信息。并提供了 Ai 生成题目自动检查答案的功能。
 ---
 
-## 工作流
 
-### 1.下载git 
-![alt text](流程照片/git_download.png)
-
-[流程](https://blog.csdn.net/mukes/article/details/115693833)
-
-### 2.fork项目
-1.
-![alt text](流程照片/fork1.png)
-> 这里点击进行fork
-2.
-![alt text](流程照片/fork2.png)
-> 将项目fork到自己的仓库
-
-### 3.下载项目到本地文件夹
-
-1.![alt text](流程照片/download.png)
-> 点击克隆或者下载
-
-
-### 4.将修改后的代码提交到自己账号上的仓库里面
-1. 在vscode 里面"ctrl+j"打开终端打开git bash
-
-2. 将本地仓库与远端仓库链接
-![alt text](流程照片/链接.png)
-
-- 使用下面的命令将本地仓库与远端仓库链接 
-
-```sh
-git remote add origin https://github.com/your_username/your_repo.git
-```
-
-3. 提交修改
-
-```
-git add .
-git commit -m "your commit message"
-git push origin main
-```
-
----
 # 后端
 
 这是一个基于Node.js和Express的教育网站后端服务，使用MySQL作为数据库。
@@ -242,18 +196,18 @@ git push origin main
 
 ### 课程相关
 
-- `GET /api/courses` - 获取所有课程
-- `GET /api/courses/:id` - 获取特定课程详情
-- `POST /api/courses` - 创建新课程（需要教师或管理员权限）
-- `POST /api/courses/:id/contents` - 添加课程内容
-- `POST /api/courses/:id/enroll` - 用户加入课程
-- `PUT /api/courses/:id/progress` - 更新用户学习进度
+- `GET /api/problems` - 获取所有课程
+- `GET /api/problems/:id` - 获取特定课程详情
+- `POST /api/problems` - 创建新课程（需要教师或管理员权限）
+- `POST /api/problems/:id/contents` - 添加课程内容
+- `POST /api/problems/:id/enroll` - 用户加入课程
+- `PUT /api/problems/:id/progress` - 更新用户学习进度
 
 ### 用户相关
 
 - `GET /api/users/:id` - 获取用户信息
-- `GET /api/users/:id/courses` - 获取用户的课程列表
-- `GET /api/users/:id/courses/:courseId/progress` - 获取用户在特定课程中的学习进度
+- `GET /api/users/:id/problems` - 获取用户的课程列表
+- `GET /api/users/:id/problems/:courseId/progress` - 获取用户在特定课程中的学习进度
 
 ## 项目结构
 
@@ -279,3 +233,48 @@ backend/
 2. 确保在.env文件中正确配置了数据库连接信息
 3. 首次运行前需要执行数据库初始化脚本
 4. 默认管理员账户：用户名admin，密码admin123
+
+
+---
+# 工作流
+
+### 1.下载git 
+![alt text](流程照片/git_download.png)
+
+[流程](https://blog.csdn.net/mukes/article/details/115693833)
+
+### 2.fork项目
+1.
+![alt text](流程照片/fork1.png)
+> 这里点击进行fork
+2.
+![alt text](流程照片/fork2.png)
+> 将项目fork到自己的仓库
+
+### 3.下载项目到本地文件夹
+
+1.![alt text](流程照片/download.png)
+> 点击克隆或者下载
+
+
+### 4.将修改后的代码提交到自己账号上的仓库里面
+1. 在vscode 里面"ctrl+j"打开终端打开git bash
+
+2. 将本地仓库与远端仓库链接
+![alt text](流程照片/链接.png)
+
+- 使用下面的命令将本地仓库与远端仓库链接 
+
+```sh
+git remote add origin https://github.com/your_username/your_repo.git
+```
+
+3. 提交修改
+
+```
+git add .
+git commit -m "your commit message"
+git push origin main
+```
+
+---
