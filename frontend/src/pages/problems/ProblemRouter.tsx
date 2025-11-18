@@ -4,6 +4,7 @@ import { Problem, api } from "@/lib/api";
 import { MultipleChoiceProblem } from "./MultipleChoiceProblem";
 import { CodingProblem } from "./CodingProblem";
 import { EssayProblem } from "./EssayProblem";
+import { toast } from "sonner";
 
 
 export const ProblemRouter = () => {
@@ -36,42 +37,51 @@ export const ProblemRouter = () => {
   };
 
   // 处理题目提交
-  const handleProblemSubmit = (answer: any) => {
+  const handleProblemSubmit = async (answer: any) => {
     if (!id) {
-      throw new Error("Problem ID is required");
+      toast.error("题目ID无效");
+      return;
     }
-    const newAnswers = { ...userAnswers, [id]: answer };
-    setUserAnswers(newAnswers);
-    saveUserProgress(newAnswers);
+    
+    try {
+      // 保存答题进度
+      const newAnswers = { ...userAnswers, [id]: answer };
+      setUserAnswers(newAnswers);
+      saveUserProgress(newAnswers);
 
-    // 更新题目完成状态
-    const updateProblemStatus = async () => {
-      try {
-        await api.updateProblem(Number(id), { completed: true });
+      // 更新题目完成状态
+      const updateProblemStatus = async () => {
+        try {
+          await api.updateProblem(Number(id), { completed: true });
 
-        // 更新localStorage中的题目列表
-        const problems = JSON.parse(
-          localStorage.getItem("userProblems") || "[]"
-        );
-        const updatedProblems = problems.map((p: Problem) =>
-          p.id === Number(id) ? { ...p, completed: true } : p
-        );
-        localStorage.setItem("userProblems", JSON.stringify(updatedProblems));
+          // 更新localStorage中的题目列表
+          const problems = JSON.parse(
+            localStorage.getItem("userProblems") || "[]"
+          );
+          const updatedProblems = problems.map((p: Problem) =>
+            p.id === Number(id) ? { ...p, completed: true } : p
+          );
+          localStorage.setItem("userProblems", JSON.stringify(updatedProblems));
 
-        // 触发自定义事件，通知其他组件题目状态已更新
-        window.dispatchEvent(
-          new CustomEvent("bookmarksUpdated", {
-            detail: { updatedProblems },
-          })
-        );
-      } catch (error) {
-        console.error("Failed to update problem status:", error);
-      }
-    };
+          // 触发自定义事件，通知其他组件题目状态已更新
+          window.dispatchEvent(
+            new CustomEvent("bookmarksUpdated", {
+              detail: { updatedProblems },
+            })
+          );
+          
+          toast.success("提交成功！");
+        } catch (error) {
+          console.error("Failed to update problem status:", error);
+          toast.error("提交失败，请重试");
+        }
+      };
 
-    updateProblemStatus();
-
-    toast.success("提交成功！");
+      await updateProblemStatus();
+    } catch (error) {
+      console.error("提交过程中发生错误:", error);
+      toast.error("提交失败，请重试");
+    }
   };
 
   // 获取题目数据
@@ -212,5 +222,4 @@ export const ProblemRouter = () => {
   );
 };
 
-// 导入toast
-import { toast } from "sonner";
+

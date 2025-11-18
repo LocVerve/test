@@ -1,11 +1,47 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { api, Problem } from "../lib/api";
-import SmoothDropdown from "../components/SmoothDropdown"
+import SmoothDropdown from "../components/SmoothDropdown";
+import Checkbox2 from "@/components/CusomCheckbox2";
+import Input from "@/components/input";
 
+
+// 获取题目类型图标
+const getProblemTypeIcon = (template: string) => {
+  switch (template) {
+    case "multiple-choice":
+      return "fa-circle-check";
+    case "coding":
+      return "fa-code";
+    case "essay":
+      return "fa-pen-to-square";
+    case "fill-blank":
+      return "fa-square-pen";
+    default:
+      return "fa-question";
+  }
+};
+
+// 获取题目类型名称
+const getProblemTypeName = (template: string) => {
+  switch (template) {
+    case "multiple-choice":
+      return "选择题";
+    case "coding":
+      return "编程题";
+    case "essay":
+      return "解答题";
+    case "fill-blank":
+      return "填空题";
+    default:
+      return "未知类型";
+  }
+};
 
 export default function BookmarkPanel() {
+  const navigate = useNavigate();
   const [bookmarkedProblems, setBookmarkedProblems] = useState<Problem[]>([]);
   const [filteredProblems, setFilteredProblems] = useState<Problem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("全部");
@@ -155,9 +191,7 @@ export default function BookmarkPanel() {
 
   // 导航到题目详情页
   const navigateToProblem = (id: number) => {
-    // 在实际应用中，这里应该使用路由导航
-    // window.location.href = `/problems/${id}`;
-    console.log(`导航到题目 ${id}`);
+    navigate(`/problems/${id}`);
   };
 
   // 处理难度过滤切换
@@ -204,12 +238,10 @@ export default function BookmarkPanel() {
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i className="fa-solid fa-search text-gray-400"></i>
               </div>
-              <input
-                type="text"
+              <Input
                 placeholder="搜索收藏的题目..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
               />
             </div>
             {/* 分类筛选 */}
@@ -275,13 +307,10 @@ export default function BookmarkPanel() {
           {/* 额外筛选选项 */}
           <div className="mt-4 flex flex-wrap items-center gap-4">
             <div className="flex items-center">
-              <input
+              <Checkbox2
                 id="showCompleted"
-                type="checkbox"
                 checked={showCompleted}
-                onChange={(e) => setShowCompleted(e.target.checked)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                aria-label="显示已完成题目"
+                onChange={setShowCompleted}
               />
               <label
                 htmlFor="showCompleted"
@@ -340,8 +369,18 @@ export default function BookmarkPanel() {
                           ? "中等"
                           : "困难"}
                       </span>
+                      {/* 类型标签 */}
                       <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                         {problem.category}
+                      </span>
+                      {/* 题目类型 */}
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 flex items-center">
+                        <i
+                          className={`fas ${getProblemTypeIcon(
+                            problem.template
+                          )} mr-1`}
+                        ></i>
+                        {getProblemTypeName(problem.template)}
                       </span>
                     </div>
 
@@ -435,8 +474,7 @@ export default function BookmarkPanel() {
             </p>
             <button
               onClick={() => {
-                // 在实际应用中，这里应该导航到题目列表页面
-                console.log("导航到题目列表");
+                navigate("/problems");
               }}
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >

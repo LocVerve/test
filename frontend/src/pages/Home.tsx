@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-
+import Button from "@/components/fine_button";
 
 ///  想法: 给页面增加落叶效果
 //> 落叶效果
@@ -32,31 +32,31 @@ const Leaf = ({ delay }: { delay: number }) => {
   );
 };
 
-const  hhlist = 'https://leetcode.cn/'
+const hhlist = "https://leetcode.cn/";
 console.log("来点带劲的网站不?:👹", hhlist);
 
 //> 图标列表
 const features = [
-    {
-      icon: "icon-shu",
-      title: "丰富的题目库",
-      description: "超过1000道编程题目，涵盖各种难度级别和知识点",
-    },
-    {
-      icon: "icon-zhexiantu",
-      title: "学习进度跟踪",
-      description: "实时监控您的学习进度和解题能力提升情况",
-    },
-    {
-      icon: "icon-erjidaohang_celve",
-      title: "详细解析",
-      description: "每道题目都配有详细的解题思路和最优解法分析",
-    }
-  ];
+  {
+    icon: "icon-shu",
+    title: "丰富的题目库",
+    description: "超过1000道编程题目，涵盖各种难度级别和知识点",
+  },
+  {
+    icon: "icon-zhexiantu",
+    title: "学习进度跟踪",
+    description: "实时监控您的学习进度和解题能力提升情况",
+  },
+  {
+    icon: "icon-erjidaohang_celve",
+    title: "详细解析",
+    description: "每道题目都配有详细的解题思路和最优解法分析",
+  },
+];
 
 function Home() {
   const navigate = useNavigate();
-    return (
+  return (
     <div className="min-h-screen bg-gradient-to-br from-red-600 to-indigo-700 flex flex-col text-white">
       {/* 背景装饰元素 */}
       <div className="fixed inset-0 bg-[url('..\src\bg\bg2.jpg')] flex items-center justify-center p-4"></div>
@@ -65,7 +65,7 @@ function Home() {
         {[...Array(15)].map((_, i) => (
           <Leaf key={i} delay={i * 0.5} />
         ))}
-           </div>
+      </div>
       {/* 主内容区 */}
       <main className="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12 relative z-10">
         <div className="text-center max-w-3xl w-full">
@@ -85,22 +85,27 @@ function Home() {
             等价于 
             function(){navigate()}  
             */}
-            <button
+            <Button
               onClick={() => navigate("/login")}
-              className="px-8 py-4 border border-transparent rounded-full shadow-lg text-lg font-medium text-blue-700 bg-white hover:bg-blue-50 transition duration-300 transform hover:scale-105"
-            >
-              Go GO GO ~ <i className="iconfont icon-arrow-right ml-1"></i>
-            </button>
+              children="GO GO GO ~ "
+            ></Button>
           </div>
         </div>
         {/* 特性介绍部分 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
           {features.map((feature, index) => (
-            <div key={index} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300">
-              <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"> 
-                <i className={`iconfont ${feature.icon} text-2xl text-white`}></i>
+            <div
+              key={index}
+              className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300"
+            >
+              <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i
+                  className={`iconfont ${feature.icon} text-2xl text-white`}
+                ></i>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
+              <h3 className="text-xl font-bold text-white mb-2">
+                {feature.title}
+              </h3>
               <p className="text-white/80">{feature.description}</p>
             </div>
           ))}
@@ -124,11 +129,6 @@ function Home() {
 }
 
 export default Home;
-
-
-
-
-
 
 /*
 📚📚📚

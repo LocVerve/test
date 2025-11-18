@@ -9,7 +9,8 @@ import { useContext } from "react";
 import { AuthContext } from "@/contexts/authContext";
 import { api, Problem } from "@/lib/api";
 import SmoothDropdown from "@/components/SmoothDropdown";
-
+import Input  from "@/components/input";
+import Checkbox2 from "@/components/CusomCheckbox2";
 // 获取题目类型图标
 const getProblemTypeIcon = (template: string) => {
   switch (template) {
@@ -61,7 +62,7 @@ export default function ProblemSelectionPage() {
   const [selectedCategory, setSelectedCategory] = useState("全部");
   const [difficultyFilter, setDifficultyFilter] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showCompleted, setShowCompleted] = useState(true);
+  const [showCompleted, setShowCompleted] = useState(false);
   const [showBookmarked, setShowBookmarked] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeView, setActiveView] = useState<
@@ -70,7 +71,7 @@ export default function ProblemSelectionPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [showSettingsMenu, setShowSettingsMenu] = useState(false); // 控制设置菜单的显示状态
   const [bgColor, setBgColor] = useState(
-    "bg-gradient-to-br from-blue-100 to-blue-300"
+    "bg-gradient-to-br  from-blue-100 to-blue-100 "
   ); // 当前背景颜色
 
   // 处理AI生成的题目
@@ -513,14 +514,12 @@ export default function ProblemSelectionPage() {
                     {/* 搜索框 */}
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i className="fa-solid fa-search text-gray-400"></i>
                       </div>
-                      <input
-                        type="text"
-                        placeholder="搜索题目..."
+                    <Input 
+                      
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+    
                       />
                     </div>
 
@@ -586,13 +585,10 @@ export default function ProblemSelectionPage() {
                   {/* 额外筛选选项 */}
                   <div className="mt-4 flex flex-wrap items-center gap-4">
                     <div className="flex items-center">
-                      <input
+                      <Checkbox2
                         id="showCompleted"
-                        type="checkbox"
                         checked={showCompleted}
-                        onChange={(e) => setShowCompleted(e.target.checked)}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        aria-label="显示已完成题目"
+                        onChange={setShowCompleted}
                       />
                       <label
                         htmlFor="showCompleted"

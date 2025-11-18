@@ -51,17 +51,42 @@ export const api = {
 
   // 更新题目状态（完成/收藏等）
   updateProblem: async (id: number, data: Partial<Problem>): Promise<Problem> => {
-    const response = await fetch(`${API_BASE_URL}/problems/${id}/status`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user_id: JSON.parse(localStorage.getItem("user") || sessionStorage.getItem("user") || "{}").id,
-        ...data
-      }),
-    });
-    return response.json();
+    try {
+      // 获取用户信息，增加错误处理
+      let user;
+      try {
+        const userStr = localStorage.getItem("user") || sessionStorage.getItem("user") || "{}";
+        user = JSON.parse(userStr);
+      } catch (e) {
+        console.error("Failed to parse user data:", e);
+        throw new Error("用户信息无效，请重新登录");
+      }
+      
+      if (!user || !user.id) {
+        throw new Error("用户未登录，请先登录");
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/problems/${id}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: user.id,
+          ...data
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: "请求失败" }));
+        throw new Error(errorData.message || `请求失败，状态码: ${response.status}`);
+      }
+      
+      return response.json();
+    } catch (error) {
+      console.error("API请求失败:", error);
+      throw error; // 重新抛出错误，让调用方处理
+    }
   }
 };
 
