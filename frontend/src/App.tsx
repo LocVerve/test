@@ -5,6 +5,7 @@ import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import ProblemSelectionPage from "@/pages/ProblemSelectionPage";
 import { ProblemRouter } from "@/pages/problems/ProblemRouter";
+import ProfilePanel from "@/pages/ProfilePanel";
 import { useState, useEffect } from "react";
 import { AuthContext } from "@/contexts/authContext";
 import { toast } from "sonner";
@@ -86,6 +87,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <ProblemRouter />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePanel />
               </ProtectedRoute>
             }
           />

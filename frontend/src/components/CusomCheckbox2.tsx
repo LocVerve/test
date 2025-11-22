@@ -1,3 +1,4 @@
+// 这个勾选框是用于题目选择界面
 import styled from 'styled-components';
 
 interface CheckboxProps {

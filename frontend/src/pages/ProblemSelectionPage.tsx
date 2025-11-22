@@ -11,7 +11,9 @@ import { api, Problem } from "@/lib/api";
 import SmoothDropdown from "@/components/SmoothDropdown";
 import Input  from "@/components/input";
 import Checkbox2 from "@/components/CusomCheckbox2";
-
+import AvatarButton from "@/components/setting";
+import SettingMenu from "@/components/setting_show";
+import BookmarkCheckbox from "@/components/CusomCheckbox3";
 const getProblemTypeIcon = (template: string) => {
   switch (template) {
     case "multiple-choice":
@@ -73,6 +75,23 @@ export default function ProblemSelectionPage() {
   const [bgColor, setBgColor] = useState(
     "bg-gradient-to-br  from-blue-100 to-blue-100 "
   ); // 当前背景颜色
+  
+  // 获取用户头像
+  const getUserAvatar = () => {
+    try {
+      const userProfile = localStorage.getItem('userProfile');
+      if (userProfile) {
+        const parsedProfile = JSON.parse(userProfile);
+        return parsedProfile.avatar;
+      }
+    } catch (error) {
+      console.error('Failed to get user avatar:', error);
+    }
+    // 默认头像
+    return "https://picsum.photos/seed/defaultuser/100/100.jpg";
+  };
+  
+  const userAvatar = getUserAvatar();
 
   // 处理AI生成的题目
   const handleGeneratedProblems = (problems: any[]) => {
@@ -104,11 +123,35 @@ export default function ProblemSelectionPage() {
     }
   }, [sidebarCollapsed]);
 
+  // 全局点击检测，当点击页面上任何一点时关闭用户菜单
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // 检查点击是否在用户菜单内部
+      const userMenu = document.querySelector(".absolute.top-12.right-0");
+      const avatarButton = document.querySelector(".avatar-button");
+      
+      if (userMenu && !userMenu.contains(event.target as Node) && 
+          avatarButton && !avatarButton.contains(event.target as Node)) {
+        setShowSettingsMenu(false);
+      }
+    };
+
+    // 当用户菜单显示时，添加全局点击监听
+    if (showSettingsMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    // 清理函数，移除事件监听
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSettingsMenu]);
+
   // 退出登录函数
   const handleLogout = () => {
     localStorage.removeItem("userProblems"); // 清除题目数据
     logout(); // 调用 AuthContext 中的 logout 函数
-    setShowSettingsMenu(false); // 关闭设置菜单
+    setShowSettingsMenu(false); // 关闭用户菜单
   };
 
   // 切换设置菜单显示状态
@@ -272,6 +315,27 @@ export default function ProblemSelectionPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br">
+      {/* 顶部导航栏 */}
+      <header className={cn("shadow-sm border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center", bgColor)}>
+        <div className="flex items-center">
+          <i className="fa-solid fa-code text-blue-600 text-2xl"></i>
+          <span className="ml-2 text-xl font-bold text-gray-900">XUTCode</span>
+        </div>
+        <div className="relative">
+        <AvatarButton 
+          avatarUrl={userAvatar} 
+          onClick={toggleSettingsMenu}
+        />
+        
+        {/* 设置弹出菜单 - 使用SettingMenu组件 */}
+        {showSettingsMenu && (
+          <div className="absolute top-12 right-0 z-50 overflow-hidden transition-all duration-200 transform origin-top-right animate-scaleIn">
+            <SettingMenu onLogout={handleLogout} />
+          </div>
+        )}
+      </div>
+      </header>
+      
       <div className="flex flex-1 overflow-hidden relative">
         {/* 左侧导航栏 */}
         <aside
@@ -295,36 +359,14 @@ export default function ProblemSelectionPage() {
             )}
           </button>
           <div className="h-full flex flex-col">
-            <div className="flex items-center h-16 px-4 border-b border-gray-200 overflow-hidden">
-              <i className="fa-solid fa-code text-blue-600 text-2xl flex-shrink-0"></i>
-              {!sidebarCollapsed && (
-                <span className="text-xl font-bold text-gray-900 ml-2 whitespace-nowrap transition-opacity duration-300">
-                  XUTCode
-                </span>
-              )}
-            </div>
+           
             <div
               className={`flex-1 overflow-y-auto transition-all duration-500 ${
                 sidebarCollapsed ? "p-2" : "p-4"
               }`}
             >
               <nav className="space-y-1">
-                <button
-                  onClick={() => setActiveView("profile")}
-                  className={cn(
-                    "w-full flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-300",
-                    activeView === "profile"
-                      ? "text-blue-600 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 shadow-sm"
-                      : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-blue-600 hover:shadow-sm"
-                  )}
-                >
-                  <i className="fa-solid fa-user-circle flex-shrink-0 transition-transform duration-300 group-hover:scale-110"></i>
-                  {!sidebarCollapsed && (
-                    <span className="ml-3 whitespace-nowrap transition-all duration-300 group-hover:translate-x-1">
-                      个人中心
-                    </span>
-                  )}
-                </button>
+               
                 <button
                   onClick={() => setActiveView("problems")}
                   className={cn(
@@ -390,101 +432,7 @@ export default function ProblemSelectionPage() {
               </nav>
             </div>
 
-            {/* 底部设置按钮 */}
-            <div
-              className={cn("relative mt-auto", sidebarCollapsed && "-mb+5")}
-              onClick={toggleSettingsMenu}
-            >
-              <button
-                className={cn(
-                  "w-full flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-300",
-                  "relative -mt-20",
-                  sidebarCollapsed && "-mb+5"
-                )}
-              >
-                <i className="fa-solid fa-gear text-gray-500 text-xl flex-shrink-0 transition-transform duration-300 group-hover:rotate-90 group-hover:text-blue-600"></i>
-                {!sidebarCollapsed && (
-                  <span className="text-lg font-medium text-gray-700 ml-2 whitespace-nowrap transition-all duration-300 group-hover:translate-x-1 group-hover:text-blue-600">
-                    设置
-                  </span>
-                )}
-              </button>
 
-              {/* 设置弹出菜单 - 类似 VSCode 的弹出面板 */}
-              {showSettingsMenu && (
-                <div className="absolute bottom-full left-0 mb-2 w-64 rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden transition-all duration-200 transform origin-bottom-left animate-scaleIn bg-white">
-                  <div className="py-2 bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200 px-4 text-sm font-medium text-blue-700">
-                    设置选项
-                  </div>
-                  <div className="py-1">
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center w-full px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-blue-600 hover:shadow-sm"
-                    >
-                      <i className="fa-solid fa-right-from-bracket mr-3 text-gray-500"></i>
-                      <span>退出登录</span>
-                    </button>
-                    <button className="flex items-center w-full px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-blue-600 hover:shadow-sm">
-                      <i className="fa-solid fa-circle-info mr-3 text-gray-500"></i>
-                      <span>关于</span>
-                    </button>
-                    <button className="flex items-center w-full px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-blue-600 hover:shadow-sm">
-                      <i className="fa-solid fa-question-circle mr-3 text-gray-500"></i>
-                      <span>帮助</span>
-                    </button>
-                    <div className="border-t border-gray-200 my-1"></div>
-                    <div className="px-4 py-2 text-sm font-medium text-blue-700 bg-gradient-to-r from-blue-50 to-blue-100">
-                      背景颜色
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 px-2 py-1">
-                      {[
-                        {
-                          name: "浅蓝渐变",
-                          value: "bg-gradient-to-br from-blue-100 to-blue-300",
-                        },
-                        {
-                          name: "浅绿渐变",
-                          value:
-                            "bg-gradient-to-br from-green-100 to-green-300",
-                        },
-                        {
-                          name: "origin",
-                          value: "bg-gradient-to-br from-blue-100 to-blue-100",
-                        },
-                      ].map((color) => (
-                        <button
-                          key={color.value}
-                          onClick={() => {
-                            setBgColor(color.value);
-                            localStorage.setItem("bgColor", color.value);
-                            toast.success(`背景已更改为${color.name}`);
-                          }}
-                          className={`h-8 rounded-md border transition-all duration-200 ${
-                            bgColor === color.value
-                              ? "ring-2 ring-blue-500 ring-offset-2"
-                              : "border-gray-200"
-                          }`}
-                          style={{
-                            background: color.value.includes("gradient")
-                              ? color.value.replace("bg-", "")
-                              : "",
-                          }}
-                          title={color.name}
-                        >
-                          <div
-                            className={`w-full h-full rounded-md ${
-                              color.value.includes("gradient")
-                                ? color.value
-                                : "bg-" + color.value
-                            }`}
-                          ></div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
         </aside>
 
@@ -617,27 +565,27 @@ export default function ProblemSelectionPage() {
                               <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
                                 {problem.title}
                               </h3>
-                              <button
+                              <div
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   toggleBookmark(problem.id);
                                 }}
-                                className="text-gray-400 hover:text-yellow-500 transition-colors"
+                                className="cursor-pointer"
                                 aria-label={
                                   problem.bookmarked
                                     ? "取消收藏此题目"
                                     : "收藏此题目"
                                 }
                               >
-                                {problem.bookmarked ? (
-                                  <i className="fa-solid fa-bookmark text-yellow-500"></i>
-                                ) : (
-                                  <i className="fa-regular fa-bookmark"></i>
-                                )}
-                                <span className="sr-only">
-                                  {problem.bookmarked ? "已收藏" : "未收藏"}
-                                </span>
-                              </button>
+                                <BookmarkCheckbox 
+                                  checked={problem.bookmarked}
+                                  onChange={(checked) => {
+                                    if (checked !== problem.bookmarked) {
+                                      toggleBookmark(problem.id);
+                                    }
+                                  }}
+                                />
+                              </div>
                             </div>
 
                             <div className="flex flex-wrap gap-2 mb-4">
