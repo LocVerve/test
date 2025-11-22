@@ -11,7 +11,7 @@ import { api, Problem } from "@/lib/api";
 import SmoothDropdown from "@/components/SmoothDropdown";
 import Input  from "@/components/input";
 import Checkbox2 from "@/components/CusomCheckbox2";
-// 获取题目类型图标
+
 const getProblemTypeIcon = (template: string) => {
   switch (template) {
     case "multiple-choice":

@@ -2,7 +2,7 @@ import { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useTheme } from '@/hooks/useTheme';
+
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend
@@ -103,7 +103,6 @@ const MOCK_USER_PROFILE: UserProfile = {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
 export default function ProfilePanel() {
-  const { toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('stats');
@@ -120,14 +119,7 @@ export default function ProfilePanel() {
     toast.success('个人资料更新成功！');
   };
 
-  const handlePreferenceChange = (key: keyof UserProfile['preferences'], value: boolean) => {
-    const updatedPreferences = { ...editedProfile.preferences, [key]: value };
-    setEditedProfile({ ...editedProfile, preferences: updatedPreferences });
-    if (key === 'darkMode') {
-      toggleTheme();
-    }
-  };
-
+  
   const removeFromWrongProblems = (id: number) => {
     setWrongProblems(prev => prev.filter(problem => problem.id !== id));
     toast.success('已从错题本中移除');

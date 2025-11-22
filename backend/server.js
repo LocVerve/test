@@ -11,7 +11,12 @@ const problemRoutes = require('./routes/problems');
 const app = express();
 
 // 中间件
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173', 'http://127.0.0.1:3000'], // 允许的前端地址
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 允许的HTTP方法
+  allowedHeaders: ['Content-Type', 'Authorization'], // 允许的请求头
+  credentials: true // 允许发送凭证
+}));
 app.use(express.json());
 
 // 路由

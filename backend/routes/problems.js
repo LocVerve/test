@@ -84,19 +84,39 @@ router.put('/:id/status', async (req, res) => {
 
     if (existing.length > 0) {
       // 更新现有记录
+      // 确保参数不为undefined，如果是undefined则使用null
+      const completedValue = completed !== undefined ? completed : null;
+      const bookmarkedValue = bookmarked !== undefined ? bookmarked : null;
+      
       await db.execute(
         'UPDATE user_problems SET completed = ?, bookmarked = ?, completed_at = IF(?, NOW(), completed_at) WHERE user_id = ? AND problem_id = ?',
-        [completed, bookmarked, completed, user_id, problemId]
+        [completedValue, bookmarkedValue, completedValue, user_id, problemId]
       );
     } else {
       // 创建新记录
+      // 确保参数不为undefined，如果是undefined则使用null
+      const completedValue = completed !== undefined ? completed : null;
+      const bookmarkedValue = bookmarked !== undefined ? bookmarked : null;
+      
       await db.execute(
         'INSERT INTO user_problems (user_id, problem_id, completed, bookmarked, completed_at) VALUES (?, ?, ?, ?, ?)',
-        [user_id, problemId, completed, bookmarked, completed ? new Date() : null]
+        [user_id, problemId, completedValue, bookmarkedValue, completedValue ? new Date() : null]
       );
     }
 
-    res.json({ message: '状态更新成功' });
+    // 获取更新后的题目信息
+    const [updatedProblem] = await db.execute(
+      'SELECT p.*, up.completed, up.bookmarked FROM problems p JOIN user_problems up ON p.id = up.problem_id WHERE up.user_id = ? AND up.problem_id = ?',
+      [user_id, problemId]
+    );
+    
+    if (updatedProblem.length > 0) {
+      // 转换JSON字段
+      parseJSONFieldsInArray(updatedProblem, ['tags']);
+      res.json(updatedProblem[0]);
+    } else {
+      res.status(404).json({ message: '题目未找到' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: '服务器错误' });
