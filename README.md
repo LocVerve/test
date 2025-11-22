@@ -29,6 +29,10 @@ pnpm install
 pnpm run dev
 ```
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e11eb9b20ce38bd333bacc432b860417858de669
 
 - 在浏览器访问 http://localhost:3000
 
