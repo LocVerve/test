@@ -65,15 +65,13 @@ router.post('/login', async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE }
     );
-
-    
     res.json({
       id: user.id.toString(),
       email: user.email,
       username: user.username,
       studentId: user.id.toString(), // 添加studentId字段，使用id的值
-      role: user.role,
-      token
+      role: user.role,  //- 这个字段用于区分用户角色, 如 'student' 或 'admin'  后期在前端会有具体的判断和使用逻辑
+      token 
     });
   } catch (error) {
     console.error(error);

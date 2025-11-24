@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import CustomCheckbox from "@/components/CustomCheckbox";
-
+import {api} from "@/lib/api";
 
 
 
@@ -57,24 +57,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // 使用后端API进行登录
-      const response = await fetch("http://localhost:3001/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || "登录失败");
-      }
-      
-      // 后端返回包含用户信息和token的对象
-      const matchedUser = data;
-
+      const matchedUser = await api.login(email, password);
       if (matchedUser) {
         setIsAuthenticated(true);
 

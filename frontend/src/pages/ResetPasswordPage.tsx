@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-
+import { api } from "@/lib/api";
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -25,10 +25,7 @@ export default function ResetPasswordPage() {
       }
 
       try {
-        const response = await fetch("http://localhost:3001/users");
-        const users = await response.json();
-
-        const userExists = users.some((user: any) => user.id === parseInt(userId));
+        const userExists = await api.checkUserExists(userId);
         setUserExists(userExists);
 
         if (!userExists) {
@@ -75,39 +72,11 @@ export default function ResetPasswordPage() {
     setIsLoading(true);
 
     try {
-      // 获取用户数据
-      const response = await fetch("http://localhost:3001/users");
-      const users = await response.json();
-
-      // 查找用户
-      const userIndex = users.findIndex((user: any) => user.id === parseInt(userId || ""));
-
-      if (userIndex === -1) {
-        toast.error("用户不存在");
-        return;
-      }
-
-      // 更新密码
-      users[userIndex].password = password;
-
-      // 更新用户数据
-      const updateResponse = await fetch(`http://localhost:3001/users/${users[userIndex].id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ password }),
-      });
-
-      if (updateResponse.ok) {
-        toast.success("密码重置成功");
-        navigate("/login");
-      } else {
-        toast.error("密码重置失败，请稍后重试");
-      }
+      await api.resetPassword(userId || "", password);
+      toast.success("密码重置成功");
+      navigate("/login");
     } catch (error) {
-      toast.error("请求失败，请稍后重试");
-      console.error("Password reset error:", error);
+      toast.error("密码重置失败，请稍后重试");
     } finally {
       setIsLoading(false);
     }
@@ -123,9 +92,7 @@ export default function ResetPasswordPage() {
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
                   链接无效
                 </h1>
-                <p className="text-gray-500">
-                  此密码重置链接无效或已过期。
-                </p>
+                <p className="text-gray-500">此密码重置链接无效或已过期。</p>
               </div>
               <button
                 onClick={() => navigate("/forgot-password")}
@@ -149,9 +116,7 @@ export default function ResetPasswordPage() {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 重置密码
               </h1>
-              <p className="text-gray-500">
-                请设置您的新密码
-              </p>
+              <p className="text-gray-500">请设置您的新密码</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
@@ -208,7 +173,9 @@ export default function ResetPasswordPage() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className={cn(
                       "block w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200",
-                      formErrors.confirmPassword ? "border-red-500" : "border-gray-300"
+                      formErrors.confirmPassword
+                        ? "border-red-500"
+                        : "border-gray-300"
                     )}
                     placeholder="••••••••"
                     onKeyDown={(e) => {

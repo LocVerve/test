@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = "http://localhost:3001/api";
 
 // 题目类型定义
 export interface Problem {
@@ -34,8 +34,6 @@ interface Blank {
   answer: string;
 }
 
-
-
 export const api = {
   // 获取所有题目
   getProblems: async (): Promise<Problem[]> => {
@@ -50,43 +48,130 @@ export const api = {
   },
 
   // 更新题目状态（完成/收藏等）
-  updateProblem: async (id: number, data: Partial<Problem>): Promise<Problem> => {
+  updateProblem: async (
+    id: number,
+    data: Partial<Problem>
+  ): Promise<Problem> => {
     try {
       // 获取用户信息，增加错误处理
       let user;
       try {
-        const userStr = localStorage.getItem("user") || sessionStorage.getItem("user") || "{}";
+        const userStr =
+          localStorage.getItem("user") ||
+          sessionStorage.getItem("user") ||
+          "{}";
         user = JSON.parse(userStr);
       } catch (e) {
         console.error("Failed to parse user data:", e);
         throw new Error("用户信息无效，请重新登录");
       }
-      
+
       if (!user || !user.id) {
         throw new Error("用户未登录，请先登录");
       }
-      
+
       const response = await fetch(`${API_BASE_URL}/problems/${id}/status`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           user_id: user.id,
-          ...data
+          ...data,
         }),
       });
-      
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: "请求失败" }));
-        throw new Error(errorData.message || `请求失败，状态码: ${response.status}`);
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "请求失败" }));
+        throw new Error(
+          errorData.message || `请求失败，状态码: ${response.status}`
+        );
       }
-      
+
       return response.json();
     } catch (error) {
       console.error("API请求失败:", error);
       throw error; // 重新抛出错误，让调用方处理
     }
-  }
-};
+  },
+  // 用户登录
+  login: async (email: string, password: string) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "登录失败");
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
+  },
+
+  // 获取所有用户
+  getAllUsers: async () => {
+    try {
+      const response = await fetch("http://localhost:3001/users");
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      throw error;
+    }
+  },
+
+  // 检查用户是否存在
+  checkUserExists: async (userId: string) => {
+    try {
+      const users = await api.getAllUsers();
+      return users.some((user: any) => user.id === parseInt(userId));
+    } catch (error) {
+      console.error("Error checking user:", error);
+      throw error;
+    }
+  },
+
+  // 重置用户密码
+  resetPassword: async (userId: string, newPassword: string) => {
+    try {
+      // 获取用户数据
+      const users = await api.getAllUsers();
+
+      // 查找用户
+      const user = users.find((user: any) => user.id === parseInt(userId));
+
+      if (!user) {
+        throw new Error("用户不存在");
+      }
+
+      // 更新密码
+      const response = await fetch(`http://localhost:3001/users/${user.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password: newPassword }),
+      });
+
+      if (!response.ok) {
+        throw new Error("密码重置失败");
+      }
+
+      return true;
+    } catch (error) {
+      console.error("Password reset error:", error);
+      throw error;
+    }
+  },
+};
