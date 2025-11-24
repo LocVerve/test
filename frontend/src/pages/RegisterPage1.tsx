@@ -145,7 +145,7 @@ export default function EmailVerificationPage() {
                     placeholder="输入QQ号"
                     disabled={isCodeSent}
                   />
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-900">
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-1000">
                     @qq.com
                   </div>
                 </div>

@@ -147,7 +147,7 @@ export default function LoginPage() {
                         "block w-full pl-10 pr-3 py-3 border rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200",
                         formErrors.email ? "border-red-500" : "border-gray-300"
                       )}
-                      placeholder="输入QQ号"
+                      placeholder="输入账号"
                     />
                   </div>
                   <div className="w-[110px]">
