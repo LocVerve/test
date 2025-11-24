@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "@/pages/Home";
 import LoginPage from "@/pages/LoginPage";
+import RegisterPage from "@/pages/RegisterPage2";
+import EmailVerificationPage from "@/pages/RegisterPage1";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import ProblemSelectionPage from "@/pages/ProblemSelectionPage";
@@ -71,6 +73,26 @@ export default function App() {
                 <Navigate to="/problems" replace />
               ) : (
                 <LoginPage />
+              )
+            }
+          />
+          <Route
+            path="/email-verification"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/problems" replace />
+              ) : (
+                <EmailVerificationPage />
+              )
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/problems" replace />
+              ) : (
+                <RegisterPage />
               )
             }
           />

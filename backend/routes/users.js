@@ -89,4 +89,39 @@ router.get('/:id/courses/:courseId/progress', async (req, res) => {
   }
 });
 
+// 更新用户信息
+router.patch('/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { password } = req.body;
+    
+    // 如果需要更新密码
+    if (password) {
+      // 直接使用明文密码存储（仅用于开发阶段）
+
+
+      
+      await db.execute(
+        'UPDATE users SET password = ?, updated_at = NOW() WHERE id = ?',
+        [password, userId]
+      );
+    }
+    
+    // 获取更新后的用户信息
+    const [users] = await db.execute(
+      'SELECT id, username, email, role, created_at FROM users WHERE id = ?',
+      [userId]
+    );
+    
+    if (users.length === 0) {
+      return res.status(404).json({ message: '用户不存在' });
+    }
+    
+    res.json(users[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: '服务器错误' });
+  }
+});
+
 module.exports = router;

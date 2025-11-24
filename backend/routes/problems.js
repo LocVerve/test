@@ -98,8 +98,14 @@ router.put('/:id/status', async (req, res) => {
       const completedValue = completed !== undefined ? completed : null;
       const bookmarkedValue = bookmarked !== undefined ? bookmarked : null;
       
+      // 使用INSERT ON DUPLICATE KEY UPDATE避免并发问题
       await db.execute(
-        'INSERT INTO user_problems (user_id, problem_id, completed, bookmarked, completed_at) VALUES (?, ?, ?, ?, ?)',
+        `INSERT INTO user_problems (user_id, problem_id, completed, bookmarked, completed_at) 
+         VALUES (?, ?, ?, ?, ?) 
+         ON DUPLICATE KEY UPDATE 
+         completed = VALUES(completed), 
+         bookmarked = VALUES(bookmarked), 
+         completed_at = IF(VALUES(completed), NOW(), completed_at)`,
         [user_id, problemId, completedValue, bookmarkedValue, completedValue ? new Date() : null]
       );
     }

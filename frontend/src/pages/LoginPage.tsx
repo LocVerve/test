@@ -7,13 +7,15 @@ import { toast } from "sonner";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import CustomCheckbox from "@/components/CustomCheckbox";
+import SmoothDropdown from "@/components/SmoothDropdown";
 import {api} from "@/lib/api";
 
 
 
 export default function LoginPage() {
   //#定义hook
-  const [email, setEmail] = useState("");
+  const [emailPrefix, setEmailPrefix] = useState("");
+  const [emailSuffix, setEmailSuffix] = useState("@qq.com");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +23,9 @@ export default function LoginPage() {
     email?: string;
     password?: string;
   }>({});
+  
+  // 邮箱后缀选项
+  const emailSuffixes = ["@xaut.edu.cn","@qq.com", "@vip.qq.com"];
 
   const { setIsAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -28,12 +33,10 @@ export default function LoginPage() {
   const validateForm = (): boolean => {
     const errors: { email?: string; password?: string } = {};
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!email) {
-      errors.email = "请输入邮箱";
-    } else if (!emailRegex.test(email)) {
-      errors.email = "请输入有效的邮箱地址";
+    if (!emailPrefix) {
+      errors.email = "请输入邮箱账号";
+    } else if (!/^[a-zA-Z0-9_-]+$/.test(emailPrefix)) {
+      errors.email = "邮箱账号只能包含字母、数字、下划线和连字符";
     }
 
     if (!password) {
@@ -57,7 +60,8 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const matchedUser = await api.login(email, password);
+      const fullEmail = `${emailPrefix}${emailSuffix}`;
+      const matchedUser = await api.login(fullEmail, password);
       if (matchedUser) {
         setIsAuthenticated(true);
 
@@ -86,8 +90,17 @@ export default function LoginPage() {
       } else {
         toast.error("邮箱或密码不正确");
       }
-    } catch (error) {
-      toast.error("登录请求失败，请稍后重试");
+    } catch (error: any) {
+      // 检查是否是用户不存在的错误
+      if (error.message === "用户不存在" || error.isUserNotExist) {
+        toast.info("该邮箱尚未注册，将跳转到注册页面");
+        const fullEmail = `${emailPrefix}${emailSuffix}`;
+        setTimeout(() => {
+          navigate("/email-verification", { state: { email: fullEmail } });
+        }, 1500);
+      } else {
+        toast.error(error.message || "登录请求失败，请稍后重试");
+      }
       console.error("Login error:", error);
     } finally {
       setIsLoading(false);
@@ -108,7 +121,7 @@ export default function LoginPage() {
             <form onSubmit={handleLogin} className="space-y-5">
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="emailPrefix"
                   className="block text-sm font-medium text-gray-700 mb-1"
                   data-tooltip-id="email-tooltip"
                   data-tooltip-content="请在这里输入的账号"
@@ -120,21 +133,34 @@ export default function LoginPage() {
                   variant="info"
                   className="tooltip"
                 />
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i className="fa-solid fa-envelope text-gray-400"></i>
+                <div className="flex space-x-1">
+                  <div className="relative flex-1">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i className="fa-solid fa-envelope text-gray-400"></i>
+                    </div>
+                    <input
+                      id="emailPrefix"
+                      type="text"
+                      value={emailPrefix}
+                      onChange={(e) => setEmailPrefix(e.target.value)}
+                      className={cn(
+                        "block w-full pl-10 pr-3 py-3 border rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200",
+                        formErrors.email ? "border-red-500" : "border-gray-300"
+                      )}
+                      placeholder="输入QQ号"
+                    />
                   </div>
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={cn(
-                      "block w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200",
-                      formErrors.email ? "border-red-500" : "border-gray-300"
-                    )}
-                    placeholder="your account"
-                  />
+                  <div className="w-[110px]">
+                    <SmoothDropdown
+                      options={emailSuffixes}
+                      value={emailSuffix}
+                      onChange={(value) => setEmailSuffix(value)}
+                      className={cn(
+                        "rounded-r-lg",
+                        formErrors.email ? "border-red-500" : ""
+                      )}
+                    />
+                  </div>
                 </div>
                 {formErrors.email && (
                   <p className="mt-1 text-sm text-red-600">
@@ -242,12 +268,12 @@ export default function LoginPage() {
             <div className="text-center text-sm">
               <p className="text-grey-500">
                 还没有账号?{" "}
-                <a
-                  href="/register"
+                <button
+                  onClick={() => navigate("/email-verification")}
                   className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
                 >
                   立即注册
-                </a>
+                </button>
               </p>
             </div>
           </div>
